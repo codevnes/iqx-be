@@ -1,14 +1,29 @@
+version: '3.8'
+
 services:
-  db:
-    image: postgres:13
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: iqx_backend
+    restart: always
     ports:
-      - "5432:5432"
+      - "8000:8000"
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - ./:/app
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_SERVER=${POSTGRES_SERVER}
       - POSTGRES_DB=${POSTGRES_DB}
+      - DATABASE_URL=${DATABASE_URL}
+      - SECRET_KEY=${SECRET_KEY}
+      - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES}
+      - REFRESH_TOKEN_EXPIRE_DAYS=${REFRESH_TOKEN_EXPIRE_DAYS}
+      - ALGORITHM=${ALGORITHM}
+      - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN:-}
+      - DISCORD_NOTIFICATION_CHANNEL_ID=${DISCORD_NOTIFICATION_CHANNEL_ID:-0}
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
 volumes:
   postgres_data: 
