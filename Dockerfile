@@ -23,7 +23,7 @@ COPY alembic.ini ./
 
 # Install dependencies
 RUN poetry config virtualenvs.create false \
-    && poetry install --without dev --no-interaction --no-ansi
+    && poetry install --without dev --no-interaction --no-ansi --no-root
 
 # Copy the rest of the application
 COPY . .
